@@ -17,7 +17,7 @@ export const MenuList = [
     },
     {
         name: "My Shop",
-        path: "/my-shop",
+        path: "../dashboard",
         active: false,
     },
 ]

@@ -80,15 +80,15 @@ export default function Login() {
                 /> */}
 				<h2 className="text-blue-500 text-lg font-medium flex items-center"><IoMdArrowRoundBack/> Back to home</h2>
               </Link>
-              <div className="mt-12 flex flex-col items-center">
+              <div className="mt-12 flex flex-col items-center shadow-md shadow-gray-200 p-6 rounded-xl">
                 <h2 className="text-2xl text-blue-500 xl:text-3xl font-Staatliches tracking-wider font-extrabold">
-                  Sign up for templatana
+                  Sign up with
                 </h2>
                 <div className="w-full flex-1 mt-8">
                   <div className="flex gap-3 justify-center items-center">
                     <button
                       onClick={() => signIn("google")}
-                      className="w-full max-w-xs font-bold shadow-sm py-3 bg-blue-500 text-white flex items-center justify-center "
+                      className="w-full max-w-xs font-bold shadow-sm py-3 bg-blue-500 text-white flex items-center justify-center rounded-[5px]"
                     >
                       <div className="bg-white p-2 rounded-full">
                         <svg className="w-4" viewBox="0 0 533.5 544.3">
@@ -115,7 +115,7 @@ export default function Login() {
 
                     <button
                       onClick={() => signIn("github")}
-                      className="w-full max-w-xs font-bold shadow-sm py-3 bg-blue-500 text-white flex items-center justify-center "
+                      className="w-full max-w-xs font-bold shadow-sm py-3 bg-blue-500 text-white flex items-center justify-center rounded-[5px]"
                     >
                       <div className="bg-white p-1 rounded-full">
                         <svg className="w-6" viewBox="0 0 32 32">
@@ -129,20 +129,20 @@ export default function Login() {
                     </button>
                   </div>
 
-                  {/* <div className="my-12 border-b text-center">
+                  <div className="my-12 border-b text-center">
                     <div className="font-Staatliches leading-none px-2 inline-block text-sm text-gray-600 tracking-wider font-medium bg-white transform translate-y-1/2">
                       Or sign up with e-mail
                     </div>
-                  </div> */}
+                  </div>
 
-                  {/* <div className="mx-auto max-w-xs">
+                   <div className="mx-auto max-w-xs">
                     <div>
                       <Field
                         type="email"
                         name="email"
                         id="email"
                         placeholder="Email"
-                        className="w-full px-8 py-4 font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                        className="w-full px-8 py-4 font-medium bg-blue-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white "
                       />
                       <ErrorMessage
                         name="email"
@@ -156,7 +156,7 @@ export default function Login() {
                         name="password"
                         id="password"
                         placeholder="Password"
-                        className="w-full px-8 py-4 font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                        className="w-full px-8 py-4 font-medium bg-blue-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                       />
                       {!showPassword ? (
                         <IoEyeOffSharp
@@ -177,7 +177,7 @@ export default function Login() {
                     </div>
                     <button
                       type="submit"
-                      className="mt-5 font-Staatliches tracking-wider text-xl font-semibold bg-[black] text-gray-100 w-full py-4 flex items-center justify-center"
+                      className="mt-5 font-Staatliches tracking-wider text-xl font-semibold bg-blue-500 hover:bg-blue-600 text-gray-100 w-full py-4 flex items-center justify-center rounded-[5px]"
                     >
                       <svg
                         className="w-6 h-6 -ml-2"
@@ -191,7 +191,7 @@ export default function Login() {
                         <circle cx="8.5" cy="7" r="4" />
                         <path d="M20 8v6M23 11h-6" />
                       </svg>
-                      <span className="ml-3">Sign Up</span>
+                      <span className="ml-3 ">Sign Up</span>
                     </button>
                     <Link href='/register' className="text-center font-Staatliches relative top-3 tracking-wider hover:underline">
                       <p>Don&#39;t have an account</p>
@@ -212,7 +212,7 @@ export default function Login() {
                         Privacy Policy
                       </a>
                     </p>
-                  </div> */}
+                  </div> 
                 </div>
               </div>
             </div>

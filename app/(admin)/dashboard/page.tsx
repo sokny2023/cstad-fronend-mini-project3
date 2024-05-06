@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Button, Modal } from "flowbite-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Dashboard() {
 	const [products, setProducts] = useState<ProductType[]>([]);
@@ -13,7 +14,7 @@ export default function Dashboard() {
 	// fetch products
 	useEffect(() => {
 		setLoading(true);
-		fetch("https://fakestoreapi.com/products")
+		fetch("https://store.istad.co/products/")
 			.then((res) => res.json())
 			.then((data) => {
 				setProducts(data);
@@ -75,6 +76,8 @@ export default function Dashboard() {
 
 	return (
 		<main className="h-screen">
+			<h1 className="text-blue-500 text-2xl text-medium my-6">List Product</h1>
+			<Link href="/createProduct" className="px-4 py-2 text-gray-100 bg-blue-600 my-4">Create</Link>
 			<DataTable
 				fixedHeader
 				progressPending={loading}

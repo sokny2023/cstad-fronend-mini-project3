@@ -1,55 +1,207 @@
 "use client";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { Alert, IconButton, Tooltip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useDispatch, useSelector } from "react-redux";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-	selectProducts,
-	selectTotalPrice,
+  addToCart,
+  removeFromCart,
+  selectProducts,
+  setProductsItem
 } from "@/redux/features/cart/cartSlice";
-import { removeFromCart } from "@/redux/features/cart/cartSlice";
+import { ProductType } from "@/lib/definitions";
 
-export default function Cart() {
-	const products = useAppSelector(selectProducts);
-	const totalPrice = useAppSelector(selectTotalPrice);
-	const dispatch = useAppDispatch();
-	return (
-		<main className="h-screen grid place-content-center">
-			{products.length == 0 && <h1 className="text-6xl">Cart is Empty!</h1>}
-			{products.length !== 0 && (
-				<div>
-					<h1 className="text-6xl">
-						Total Product{" "}
-						<span className="text-red-500">{products.length}</span>
-					</h1>
-					<h2 className="text-4xl">
-						Total Price $ <span className="text-red-500">{totalPrice}</span>
-					</h2>
-				</div>
-			)}
+export default function Shop() {
+  const [cartItemsFromStore, setCartItemsFromStore] = useState<ProductType[]>(
+    []
+  );
+  const [showDiscountField, setShowDiscountField] = useState(false);
+  const [expandMoreActive, setExpandMoreActive] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [invalidDiscount, setInvalidDiscount] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(false);
+  const dispatch = useDispatch();
+  const productsState = useSelector(selectProducts);
+  const totalPrice = cartItemsFromStore.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
-			{products.length !== 0 &&
-				products.map((product) => (
-					<div
-						className="flex justify-between w-1/2 bg-gray-300 my-4 p-4 rounded-xl"
-						key={product.id}
-					>
-						<div>
-							<h1>{product.title}</h1>
-							<h2 className="text-red-500">${product.price}</h2>
-							<img
-								className="h-[100px]"
-								src={product.image}
-								alt={product.title}
-							/>
-						</div>
-						<div>
-							<button
-								onClick={() => dispatch(removeFromCart(product.id))}
-								className="bg-red-500 text-white p-2 rounded-xl"
-							>
-								Remove
-							</button>
-						</div>
-					</div>
-				))}
-		</main>
-	);
+  useEffect(() => {
+    setCartItemsFromStore(productsState);
+  }, [productsState]);
+
+  const deleteItem = (id: number) => {
+    console.log("Item deleted:", id);
+    const remainingProducts = cartItemsFromStore.filter(
+      (item) => item.id !== id
+    );
+    dispatch(setProductsItem(remainingProducts));
+  };
+
+  const handleAddToCart = (product: ProductType) => {
+    const existingItemIndex = cartItemsFromStore.findIndex(
+      (item) => item.id === product.id
+    );
+
+    if (existingItemIndex !== -1) {
+      const updatedCartItems = [...cartItemsFromStore];
+      const updatedItem = {
+        ...updatedCartItems[existingItemIndex],
+        quantity: updatedCartItems[existingItemIndex].quantity - 1
+      };
+      updatedCartItems[existingItemIndex] = updatedItem;
+      dispatch(addToCart(updatedItem));
+    } else {
+      dispatch(addToCart({ ...product, quantity: 1 }));
+    }
+  };
+
+  const handleRemoveFromCart = (id: number) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const toggleDiscountField = () => {
+    setShowDiscountField((prev) => !prev);
+    setExpandMoreActive((prev) => !prev);
+  };
+
+  const applyDiscount = () => {
+    if (discountCode === "DISCOUNT10") { // Can you take the code "DISCOUNT10"
+      setDiscountAmount(10);
+      setInvalidDiscount(false);
+      setSuccessAlert(true);
+      setTimeout(() => {
+        setSuccessAlert(false);
+      }, 3000);
+    } else {
+      setDiscountAmount(0);
+      setInvalidDiscount(true);
+      setSuccessAlert(false);
+
+      setTimeout(() => {
+        setInvalidDiscount(false);
+      }, 3000);
+    }
+  };
+
+  return (
+    <div className="container mx-auto">
+      <div className="grid gap-5 font-Staatliches my-6">
+        <h1 className="text-3xl tracking-wider">Your Shopping Cart</h1>
+        <div className="flex gap-5 lg:flex-col">
+          <div className="flex items-center justify-between flex-col w-full gap-5 ">
+            {productsState.map((product) => (
+              <div
+                key={product.id}
+                className="flex items-center justify-between w-full gap-5 border-[1px] p-5 border-slate-600"
+              >
+                <img src={product.image} alt="" className="w-[10rem]" />
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between gap-5 w-full">
+                    <div>
+                      <h1 className="tracking-wider text-lg">{product.name}</h1>
+                      <p>{product.category}</p>
+                    </div>
+                    <div className="flex flex-col">
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => deleteItem(product.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Favorite">
+                        <IconButton>
+                          <FavoriteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div className="flex place-items-center justify-between gap-5">
+                    <p className="tracking-wider">Price: $ {product.price}</p>
+                    <div className="flex items-center justify-center">
+                      <span
+                        onClick={() => handleRemoveFromCart(product.id)}
+                        className="p-[5px] cursor-pointer border border-r-0 w-7 h-full flex items-center justify-center"
+                      >
+                        -
+                      </span>
+                      <span className="border p-[5px] border-gray-300 h-full text-center w-12 ">
+                        {product.quantity}
+                      </span>
+                      <span
+                        onClick={() => handleAddToCart(product)}
+                        className="p-[5px] cursor-pointer border border-gray-300 border-l-0 w-7 h-full flex items-center justify-center"
+                      >
+                        +
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="sticky top-5 grid gap-4 w-full h-max border-[1px] p-5 border-slate-600">
+            <div className="flex items-center justify-between">
+              <h1>Order Amout: </h1>
+              <h1>$250</h1>
+            </div>
+            <div className="flex items-center justify-between">
+              <h1>Delivery: </h1>
+              <h1>$50</h1>
+            </div>
+            <div className="flex items-start flex-col w-full">
+              <button
+                onClick={toggleDiscountField}
+                className="flex items-center justify-between w-full"
+              >
+                <span>Do you have discount code?</span>
+                <ExpandMoreIcon />
+              </button>
+              <div className="w-full">
+                {showDiscountField && (
+                  <div className="grid gap-2 items-center">
+                    <input
+                      type="text"
+                      placeholder="Enter discount code"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      onClick={applyDiscount}
+                      className="bg-black text-white py-2"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="absolute top-16 right-5">
+              {invalidDiscount && (
+                <Alert variant="filled" severity="info">
+                  Invalid discount code. Please try again.
+                </Alert>
+              )}
+              {successAlert && (
+                <Alert variant="filled" severity="success">
+                  Discount applied successfully.
+                </Alert>
+              )}
+            </div>
+            <div className="flex items-center justify-between text-xl border-y-2 py-3 border-slate-600">
+              <h1>Total Price:</h1>
+              <h1>$ {totalPrice}</h1>
+            </div>
+            <button className="w-full bg-black text-white py-2">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -64,9 +64,9 @@ export function NavbarComponent() {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2 ">
-        <a href="#" className="mt-2 mr-4 text-[22px] text-red-600">
+        <Link href="/cart" className="mt-2 mr-4 text-[22px] text-red-600">
           <FaCartPlus />
-        </a>
+        </Link>
 
         <React.Fragment>
           {status === "loading" ? (
